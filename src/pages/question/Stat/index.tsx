@@ -1,10 +1,12 @@
 import * as React from 'react'
 import { FC } from 'react'
-
+import useLoadQuestionData from '@/hooks/useLoadQuestionData'
 const Stat: FC = () => {
+  const { loading, data } = useLoadQuestionData()
   return (
     <div>
-      <h1>Stat</h1>
+      <p>Stat Pages</p>
+      {loading ? <div>loading...</div> : <div>{JSON.stringify(data)}</div>}
     </div>
   )
 }
