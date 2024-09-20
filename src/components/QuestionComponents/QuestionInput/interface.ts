@@ -1,6 +1,7 @@
 export type QuestionInputPropsType = {
   title?: string
   placeholder?: string
+  disabled?: boolean
   onChange?: (newProps: QuestionInputPropsType) => void // 组件props改变的回调
 }
 

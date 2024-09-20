@@ -13,7 +13,7 @@ const ComponentProp: FC = () => {
 
   // 找不到显示提示组件
   if (selectedComponent == null) return <NoProp />
-  const { type, props } = selectedComponent
+  const { type, props, isLocked, isHidden } = selectedComponent
   // 通过type找到当前组件的配置
   const componentConf = getComponentConfByType(type)
   if (componentConf == null) return <NoProp />
@@ -29,7 +29,7 @@ const ComponentProp: FC = () => {
     // 修改props，存储到redux中
     dispatch(changeComponentProps({ fe_id, newProps }))
   }
-  return <PropComponent {...props} onChange={changeProps} />
+  return <PropComponent {...props} onChange={changeProps} disabled={isLocked || isHidden} />
 }
 
 export default ComponentProp

@@ -31,7 +31,9 @@ const useLoadQuestionData = () => {
       selectedId = componentList[0].fe_id
     }
     // 把 componentList 存储到 redux store中
-    dispatch(resetComponents({ componentList, selectedId: selectedId || '' }))
+    dispatch(
+      resetComponents({ componentList, selectedId: selectedId || '', copiedComponent: null }),
+    )
   }, [data])
 
   // 根据id变化，执行ajax加载问卷数据

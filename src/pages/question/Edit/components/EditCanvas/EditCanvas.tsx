@@ -6,6 +6,7 @@ import useGetComponentInfo from '@/hooks/useGetComponentInfo'
 import { getComponentConfByType } from '@/components/QuestionComponents'
 import { ComponentInfoType, changeSelectedId } from '@/store/componentsReducer/index'
 import { useDispatch } from 'react-redux'
+import useBindCanvasKeyPress from '@/hooks/useBindCanvasKeyPress'
 type PropsType = {
   loading: boolean
 }
@@ -31,6 +32,9 @@ const EditCanvas: FC<PropsType> = (props: PropsType) => {
     event.stopPropagation() // 阻止冒泡
     dispatch(changeSelectedId(id))
   }
+
+  // 绑定快捷键
+  useBindCanvasKeyPress()
   if (loading) {
     return (
       <div style={{ textAlign: 'center', marginTop: '24px' }}>
@@ -40,22 +44,27 @@ const EditCanvas: FC<PropsType> = (props: PropsType) => {
   }
   return (
     <div className={styles.canvas}>
-      {componentList.map((item) => {
-        const { fe_id } = item
-        return (
-          <div
-            key={fe_id}
-            className={
-              selectedId === fe_id
-                ? styles['component-wrapper-selected']
-                : styles['component-wrapper']
-            }
-            onClick={(e) => handleClick(e, fe_id)}
-          >
-            <div className={styles['component']}>{genComponent(item)}</div>
-          </div>
-        )
-      })}
+      {componentList
+        .filter((item) => !item.isHidden)
+        .map((item) => {
+          const { fe_id, isLocked } = item
+          return (
+            <div
+              key={fe_id}
+              className={[
+                selectedId === fe_id
+                  ? styles['component-wrapper-selected']
+                  : styles['component-wrapper'],
+                isLocked ? styles['locked'] : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              onClick={(e) => handleClick(e, fe_id)}
+            >
+              <div className={styles['component']}>{genComponent(item)}</div>
+            </div>
+          )
+        })}
     </div>
   )
 }
