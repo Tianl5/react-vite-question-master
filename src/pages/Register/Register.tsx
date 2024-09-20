@@ -1,16 +1,34 @@
 import * as React from 'react'
 import { FC } from 'react'
 import styles from './Register.module.scss'
-import { Typography, Space, Form, Input, Button } from 'antd'
+import { Typography, Space, Form, Input, Button, message } from 'antd'
 import { UserAddOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { LOGIN_PATHNAME } from '@/router'
 import { USERNAME_RULES, PASSWORD_RULES, CONFIRM_RULES } from '@/constant/formRules'
+import { useRequest } from 'ahooks'
+import { registerService } from '@/axios/user'
 const { Title } = Typography
 const FormItem = Form.Item
 const Register: FC = () => {
+  const navigate = useNavigate()
+  // 注册新用户
+  const { run: handleRegister } = useRequest(
+    async (values) => {
+      const { username, password, nickname } = values
+      return await registerService(username, password, nickname)
+    },
+    {
+      manual: true,
+      onSuccess: (res) => {
+        message.success('注册成功')
+        navigate(LOGIN_PATHNAME)
+      },
+    },
+  )
   const onSubmit = (values: any) => {
     console.log('submit', values)
+    handleRegister(values)
   }
   return (
     <div className={styles.container}>

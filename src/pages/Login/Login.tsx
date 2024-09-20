@@ -2,11 +2,14 @@ import * as React from 'react'
 import { FC, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './Login.module.scss'
-import { Typography, Space, Form, Input, Button, Checkbox } from 'antd'
+import { Typography, Space, Form, Input, Button, Checkbox, message } from 'antd'
 import { UserAddOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
-import { REGISTER_PATHNAME } from '@/router'
+import { REGISTER_PATHNAME, MANAGE_INDEX_PATHNAME } from '@/router'
 import { USERNAME_RULES, PASSWORD_RULES } from '@/constant/formRules'
+import { loginService } from '@/axios/user'
+import { useRequest } from 'ahooks'
+import { setToken } from '@/utils/user-token'
 const { Title } = Typography
 const FormItem = Form.Item
 
@@ -43,14 +46,27 @@ const Login: FC = () => {
   }, [])
   const onSubmit = (values: any) => {
     console.log('submit', values)
-    if (values.remember) {
-      // console.log('记住')
-      rememberUser(values.username, values.password)
-    } else {
-      // console.log('忘记')
-      deleteUserFromStorage()
-    }
+    const { username, password, remember } = values
+    remember ? rememberUser(username, password) : deleteUserFromStorage()
+
+    handleLogin(username, password)
   }
+
+  // 处理登录
+  const { run: handleLogin } = useRequest(
+    async (username: string, password: string) => {
+      return await loginService(username, password)
+    },
+    {
+      manual: true,
+      onSuccess: (result) => {
+        const { token } = result
+        setToken(token) // 存储token
+        message.success('登录成功')
+        navigate(MANAGE_INDEX_PATHNAME) // 导航到我的问卷
+      },
+    },
+  )
   return (
     <div className={styles.container}>
       <div>

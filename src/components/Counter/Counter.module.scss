@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  .counter-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 40px;
+    border: 1px solid #cccccc;
+    box-sizing: border-box;
+
+    border-radius: 10px;
+    .add {
+      flex: 1;
+      height: 100%;
+      text-align: center;
+      font-size: 24px;
+      border-right: 1px solid #cccccc;
+      cursor: pointer;
+      background-color: #fafafa;
+    }
+    .count {
+      flex: 4;
+      text-align: center;
+    }
+    .subtract {
+      height: 100%;
+      flex: 1;
+      font-size: 24px;
+      text-align: center;
+      border-left: 1px solid #cccccc;
+      cursor: pointer;
+      background-color: #fafafa;
+    }
+  }
+}

@@ -1,11 +1,30 @@
 import axios from 'axios'
 import { message } from 'antd'
-
+import { getToken } from '@/utils/user-token'
 export const baseUrl = '/fs'
 export const proxyRewrite = 'fs'
 const api = axios.create({
   timeout: 5 * 1000,
 })
+
+// request 拦截
+api.interceptors.request.use(
+  (config) => {
+    // 跳过登录注册，无需token
+    if (
+      config.url === `${baseUrl}/api/user/login` ||
+      config.url === `${baseUrl}/api/user/register`
+    ) {
+      return config
+    } else {
+      config.headers['Authorization'] = `Bearer ${getToken()}` //JWT 固定格式
+      return config
+    }
+  },
+  (err) => {
+    return Promise.reject(err)
+  },
+)
 
 // 拦截器, 统一处理errno和msg
 api.interceptors.response.use(
