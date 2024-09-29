@@ -7,9 +7,12 @@ import { UserAddOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import { REGISTER_PATHNAME, MANAGE_INDEX_PATHNAME } from '@/router'
 import { USERNAME_RULES, PASSWORD_RULES } from '@/constant/formRules'
-import { loginService } from '@/axios/user'
+import { loginService, getUserInfoService } from '@/axios/user'
 import { useRequest } from 'ahooks'
 import { setToken } from '@/utils/user-token'
+import useGetUserInfo from '@/hooks/userGetUserInfo'
+import { useDispatch } from 'react-redux'
+import { loginReducer } from '@/store/userReducer'
 const { Title } = Typography
 const FormItem = Form.Item
 
@@ -35,7 +38,9 @@ const getUserInfoFromStorage = () => {
 }
 const Login: FC = () => {
   const navigate = useNavigate()
-
+  const dispatch = useDispatch()
+  // 判断redux中当前是否已经获取到用户信息
+  const { username } = useGetUserInfo() // redux store
   const [form] = Form.useForm() // 第三方hook
   useEffect(() => {
     const { username, password } = getUserInfoFromStorage()
@@ -63,6 +68,21 @@ const Login: FC = () => {
         const { token } = result
         setToken(token) // 存储token
         message.success('登录成功')
+        setUserInfo()
+      },
+    },
+  )
+
+  // 获取用户信息
+  const { run: setUserInfo } = useRequest(
+    async () => {
+      return await getUserInfoService()
+    },
+    {
+      manual: true,
+      onSuccess: (res) => {
+        const { username, nickname } = res
+        dispatch(loginReducer({ username, nickname }))
         navigate(MANAGE_INDEX_PATHNAME) // 导航到我的问卷
       },
     },

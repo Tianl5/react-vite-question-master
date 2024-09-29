@@ -4,6 +4,7 @@ import { getNextSelectedId, insertNewComponent } from './utils'
 import { deepClone } from '@/utils'
 import { nanoid } from 'nanoid'
 import { message } from 'antd'
+import { arrayMove } from '@dnd-kit/sortable'
 export type ComponentInfoType = {
   fe_id: string // TODO 后面解释
   type: string
@@ -166,6 +167,28 @@ export const componentsSlice = createSlice({
 
       state.selectedId = componentList[selectedIndex + 1].fe_id
     },
+
+    // 修改组件标题
+    changeComponentTitle: (
+      state: ComponentsStateType,
+      action: PayloadAction<{ fe_id: string; title: string }>,
+    ) => {
+      const { fe_id, title } = action.payload
+      const curComp = state.componentList.find((item) => item.fe_id === fe_id)
+      if (curComp) {
+        curComp.title = title
+      }
+    },
+    // 移动拖拽组件位置
+    moveComponent: (
+      state: ComponentsStateType,
+      action: PayloadAction<{ oldIndex: number; newIndex: number }>,
+    ) => {
+      const { oldIndex, newIndex } = action.payload
+      const { componentList: curComponentList } = state
+
+      state.componentList = arrayMove(curComponentList, oldIndex, newIndex)
+    },
   },
 })
 
@@ -181,6 +204,8 @@ export const {
   pasteCopiedComponent,
   selectPrevComponent,
   selectNextComponent,
+  changeComponentTitle,
+  moveComponent,
 } = componentsSlice.actions
 
 export default componentsSlice.reducer

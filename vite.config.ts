@@ -1,15 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { baseUrl, proxyRewrite } from './src/axios/index'
-// import viteEslint from 'vite-plugin-eslint'
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    // viteEslint({
-    //   failOnError: false
-    // })
-  ],
+  plugins: [react()],
   resolve: {
     alias: {
       '@': '/src',
@@ -24,7 +16,7 @@ export default defineConfig({
     proxy: {
       '/fs': {
         //本地
-        target: 'http://localhost:3001',
+        target: 'http://localhost:3000',
         // 线上
         // target: 'http://114.132.217.213:8898',
         changeOrigin: true,

@@ -13,6 +13,8 @@ import {
 import { Link, useNavigate } from 'react-router-dom'
 import { updateQuestionService, duplicateQuestionService } from '@/axios/question'
 import { useRequest } from 'ahooks'
+import { QUESTION_EDIT_PATHNAME, QUESTION_STAT_PATHNAME } from '@/router'
+
 type PropsType = {
   _id: string
   title: string
@@ -49,7 +51,7 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
       manual: true,
       onSuccess(res: any) {
         message.success('复制成功')
-        navigate(`/question/edit/${res.id}`)
+        navigate(`${QUESTION_EDIT_PATHNAME}/${res.id || res._id}`)
       },
     },
   )
@@ -132,7 +134,7 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
               type="text"
               size="small"
               disabled={!isPublished}
-              onClick={() => navigate(`/question/stat/${_id}`)}
+              onClick={() => navigate(`${QUESTION_STAT_PATHNAME}/${_id}`)}
             >
               数据统计
             </Button>

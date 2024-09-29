@@ -87,7 +87,8 @@ export const HOME_PATHNAME = '/'
 export const LOGIN_PATHNAME = '/login'
 export const REGISTER_PATHNAME = '/register'
 export const MANAGE_INDEX_PATHNAME = '/manage/list'
-
+export const QUESTION_EDIT_PATHNAME = '/question/edit'
+export const QUESTION_STAT_PATHNAME = '/question/stat'
 // 判断当前路由是否是登录页或者注册页
 export const isLoginOrRegister = (pathname: string) => {
   return [LOGIN_PATHNAME, REGISTER_PATHNAME].includes(pathname)

@@ -7,13 +7,17 @@ import {
   selectPrevComponent,
   selectNextComponent,
 } from '@/store/componentsReducer'
-
+import { ActionCreators as UndoActionCreators } from 'redux-undo'
 // 判断光标是否在画布中
 const isActiveElementValid = () => {
   const activeElem = document.activeElement
 
-  if (activeElem === document.body) return true
+  //  没有增加dnd-kit 之前
+  // if (activeElem === document.body) return true
 
+  // 增加 dnd-kit 以后
+  if (activeElem === document.body) return true
+  if (activeElem?.matches('div[role="button"')) return true
   return false
 }
 /**
@@ -47,6 +51,28 @@ const useBindCanvasKeyPress = () => {
     if (!isActiveElementValid()) return
     dispatch(selectNextComponent())
   })
+  // 撤销
+  useKeyPress(
+    ['ctrl.z', 'meta.z'],
+    () => {
+      if (!isActiveElementValid()) return
+      dispatch(UndoActionCreators.undo())
+    },
+    {
+      exactMatch: true, // 严格匹配
+    },
+  )
+  // 重做
+  useKeyPress(
+    ['ctrl.y', 'meta.y'],
+    () => {
+      if (!isActiveElementValid()) return
+      dispatch(UndoActionCreators.redo())
+    },
+    {
+      exactMatch: true, // 严格匹配
+    },
+  )
 }
 
 export default useBindCanvasKeyPress

@@ -8,7 +8,12 @@ import { changeSelectedId } from '@/store/componentsReducer/index'
 import LeftPanel from './components/LeftPanel/LeftPanel'
 import RightPanel from './components/RightPanel/RightPanel'
 import EditHeader from './components/EditHeader/EditHeader'
+import { useTitle } from 'ahooks'
+import useGetPageInfo from '@/hooks/useGetPageInfo'
 const Edit: FC = () => {
+  const { title } = useGetPageInfo()
+  // 修改标题
+  useTitle(`问卷编辑 - ${title}`)
   const { loading } = useLoadQuestionData()
 
   const dispatch = useDispatch()

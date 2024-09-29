@@ -18,8 +18,8 @@ const ManageLayout: FC = () => {
   } = useRequest(createQuestionService, {
     manual: true,
     onSuccess: (res) => {
-      if (res.id) {
-        navigate(`/question/edit/${res.id}`)
+      if (res.id || res._id) {
+        navigate(`/question/edit/${res.id || res._id}`)
         message.success('问卷创建成功')
       }
     },
